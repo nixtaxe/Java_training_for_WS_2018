@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class Main {
 
     public static void main(String[] args) throws Exception{
-        FileReader reader = new FileReader("C:\\Projects\\Java_training_for_WS_2018\\src\\input.txt");
+        FileReader reader = new FileReader("src\\input.txt");
         Scanner scan = new Scanner(reader);
 
         // Формат входного файла: размерность матрицы, сама матрица без столбца свободных значений
