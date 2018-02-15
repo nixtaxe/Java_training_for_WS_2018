@@ -22,7 +22,16 @@ public class Main {
 
         Solver s = new Solver(dim, A);
 
+        double[] F = new double[dim];
+        for (int i = 0; i < dim; ++i)
+            F[i] = scan.nextDouble();
+
+        double[] res = s.getSolve(F);
+
         //Дебаг
         System.out.print(s);
+        System.out.print("\nSolution\n");
+        for (double val: res)
+            System.out.print(String.format("%10.5f", val));
     }
 }

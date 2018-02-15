@@ -23,21 +23,36 @@ public class Solver {
         }
     }
 
+    public double[] getSolve(double[] F){
+        for (int j = 0; j < n; ++j)
+            for (int i = j + 1; i < n; ++i)
+                F[i] -= F[j] * P[i][j];
+
+        double[] res = new double[n];
+        double sum;
+        for (int i = n - 1; i >= 0; --i) {
+            sum = 0;
+            for (int j = n - 1; j > i; --j)
+                sum += res[j] * T[i][j];
+            res[i] = (F[i] - sum) / T[i][i];
+        }
+
+        return res;
+    }
+
     public String toString(){
         String res = "";
         res += "P array\n";
-
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < n; ++j)
-                res += String.format("%10.5f", P[i][j]);
+        for (double[] line: P) {
+            for (double val: line)
+                res += String.format("%10.5f", val);
             res += "\n";
         }
 
         res += "T array\n";
-
-        for (int i = 0; i < n; ++i) {
-            for (int j = 0; j < n; ++j)
-                res += String.format("%10.5f", T[i][j]);
+        for (double[] line: T) {
+            for (double val: line)
+                res += String.format("%10.5f", val);
             res += "\n";
         }
 
