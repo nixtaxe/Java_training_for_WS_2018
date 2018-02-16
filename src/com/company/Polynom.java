@@ -14,4 +14,12 @@ public class Polynom {
 
         return res;
     }
+
+    public String toString() {
+        String res = "";
+        for (double val: coefs)
+            res += String.format("%10.5f", val);
+        res += "\n";
+        return res;
+    }
 }

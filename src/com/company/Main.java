@@ -1,6 +1,7 @@
 package com.company;
 import com.company.Solver;
 import com.company.Interp;
+import com.company.Approx;
 
 import java.io.File;
 import java.io.FileReader;
@@ -45,6 +46,13 @@ public class Main {
 
         // Проверка метода getValue в Polynom
         System.out.println("getValue check: " + String.format("%10.5f", x.getValue(5)));
+
+        // Проверка класса Approx
+        inp = new FileReader("src\\Approx_input.txt");
+        Approx a = new Approx(inp);
+        System.out.print(a);
+        Approx b = new Approx(1, new double[]{1, 2, 3}, new double[]{1, 2, 3});
+        System.out.print(b);
 
     }
 }

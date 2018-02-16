@@ -31,7 +31,7 @@ public class Interp extends Polynom {
         interpolate();
     }
 
-    public void interpolate(){
+    private void interpolate(){
         double[][] A = new double[n + 1][n + 1];
         double cur_x = 1;
         for (int i = 0; i <= n; ++i, cur_x = 1)
@@ -43,12 +43,7 @@ public class Interp extends Polynom {
     }
 
     public String toString(){
-        String res = "Interpolation\n";
-        for (double val: coefs)
-            res += String.format("%10.5f", val);
-        res += "\n";
-
-        return res;
+        return "Interpolation\n" + super.toString();
     }
 
 }
