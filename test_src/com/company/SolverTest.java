@@ -8,7 +8,7 @@ import java.io.FileReader;
 import static org.junit.Assert.*;
 
 public class SolverTest {
-    private double eps = 0.00001;
+    private final double eps = 0.00001;
 
     @Test
     public void testXEqualsF() {

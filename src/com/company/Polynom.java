@@ -4,7 +4,7 @@ public class Polynom {
     int n;
     double[] coefs;
 
-    double getValue(double x){
+    public double getValue(double x){
         double x_in_degree = 1;
         double res = 0;
         for (int i = 0; i <= n; ++i){

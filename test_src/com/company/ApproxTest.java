@@ -1,11 +1,17 @@
 package com.company;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class ApproxTest {
-    private double eps = 0.00001;
+    private final double eps = 0.00001;
+
+    @Before
+    public void testCreationFromFile(){
+        //...
+    }
 
     @Test
     public void testApproximationToParabola() {
