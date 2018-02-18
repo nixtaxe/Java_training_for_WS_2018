@@ -7,15 +7,14 @@ import java.util.Scanner;
 
 public class Approx extends Polynom {
     int m;
-    double[] X;
-    double[] F;
+    Solver s;
+    double[][] X_in_degree;
 
-    public Approx(int cur_n, double[] cur_X, double[] cur_F){
+    public Approx(int cur_n, double[] X, double[] F){
         n = cur_n;
-        X = cur_X;
-        F = cur_F;
         m = X.length - 1;
-        approximate();
+        createMatrixSolver((double[]) X.clone(), (double[])F.clone());
+        approximate((double[])F.clone());
     }
 
     public Approx(FileReader inp){
@@ -26,46 +25,66 @@ public class Approx extends Polynom {
         line = scan.nextLine();
         String[] str_X = line.split(" ");
         m = str_X.length - 1;
-        X = new double[m + 1];
+        double[] X = new double[m + 1];
         for (int i = 0; i <= m; ++i)
             X[i] = Double.parseDouble(str_X[i]);
 
         line = scan.nextLine();
         String[] str_F = line.split(" ");
-        F = new double[m + 1];
+        double[] F = new double[m + 1];
         for (int i = 0; i <= m; ++i)
             F[i] = Double.parseDouble(str_F[i]);
 
-        approximate();
+        createMatrixSolver((double[]) X.clone(), (double[])F.clone());
+        approximate((double[])F.clone());
     }
 
-    private void approximate(){
+    private void createMatrixSolver(double[] X, double[] F){
         double[][] A = new double[n + 1][n + 1];
         double[] new_F = new double[n + 1];
-        double[] cur_x = new double[m + 1];
-        Arrays.fill(cur_x, 1);
+        int degree = 0;
+        X_in_degree = new double[2 * (n + 1)][m + 1];
+        Arrays.fill(X_in_degree[0], 1);
 
         for (int k = n; k >= 0; --k ){
             for (int i = 0; i <= m; ++i)
-                A[n][k] += cur_x[i];
+                A[n][k] += X_in_degree[degree][i];
+            
             for (int i = 0; i <= m; ++i)
-                new_F[k] += cur_x[i] * F[i];
+                new_F[k] += X_in_degree[degree][i] * F[i];
+            
             for (int i = n - 1, j = k + 1; i >= 0 && j <= n; --i, ++j)
                 A[i][j] = A[n][k];
+            
+            degree += 1;
+            X_in_degree[degree] = (double[])X_in_degree[degree-1].clone();
             for (int i = 0; i <= m; ++i)
-                cur_x[i] *= X[i];
+                X_in_degree[degree][i] *= X[i];
+            
         }
 
         for (int k = n - 1; k >= 0; --k){
             for (int i = 0; i <= m; ++i)
-                A[k][0] += cur_x[i];
+                A[k][0] += X_in_degree[degree][i];
+            
             for (int i = k - 1, j = 1; i >= 0 && j <= n; --i, ++j)
                 A[i][j] = A[k][0];
+            
+            degree += 1;
+            X_in_degree[degree] = (double[])X_in_degree[degree-1].clone();
             for (int i = 0; i <= m; ++i)
-                cur_x[i] *= X[i];
+                X_in_degree[degree][i] *= X[i];
         }
 
-        Solver s = new Solver(n + 1, A);
+        s = new Solver(n + 1, A);
+    }
+
+    public void approximate(double[] F){
+        double[] new_F = new double[n + 1];
+        for (int i = n, degree = 0; i >= 0; --i, ++degree)
+            for (int j = 0; j <= m; ++j)
+                new_F[i] += X_in_degree[degree][j] * F[j];
+
         coefs = s.getSolve(new_F);
     }
 
