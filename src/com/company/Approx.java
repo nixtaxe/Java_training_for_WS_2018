@@ -85,7 +85,11 @@ public class Approx extends Polynom {
             for (int j = 0; j <= m; ++j)
                 new_F[i] += X_in_degree[degree][j] * F[j];
 
-        coefs = s.getSolve(new_F);
+        coefs = new double[n + 1];
+        double[] tmp = s.getSolve((double[])new_F.clone());
+        // Разворачиваем массив коэффициентов в обратном порядке, так как заполняли особым образом
+        for (int i = 0; i <= n; ++i)
+            coefs[i] = tmp[n - i];
     }
 
     public String toString() {
