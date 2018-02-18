@@ -3,14 +3,18 @@ package com.company;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.InputStream;
+
 import static org.junit.Assert.*;
 
 public class InterpTest {
     private final double eps = 0.00001;
 
-    @Before
+    @Test
     public void testCreationFromFile(){
-        //...
+        InputStream inp = this.getClass().getResourceAsStream("Interp_input.txt");
+        Interp a = new Interp(inp);
+        assertArrayEquals(new double[]{0, 1, 0}, a.coefs, eps);
     }
 
     @Test

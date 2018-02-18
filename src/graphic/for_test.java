@@ -23,14 +23,15 @@ public class for_test extends Application {
         chart.getData().add(polynom_line);
         chart.getStylesheets().add(for_test.class.getResource("chart.css").toExternalForm());
 
-        double[] xs = {1, 2, 3};
-        double[] ys = {1.5, 1.9, 2.8};
+        double[] xs = {1, 2, 3, 4, 5};
+        double[] ys = {0.5, 1.9, 2.8, 5, 5.5};
 
         for (int i = 0; i < xs.length; ++i)
             points.getData().add(new XYChart.Data<>(xs[i], ys[i]));
 
-        Approx a = new Approx(1, xs, ys);
-        for (double x = 0.0, y; x <= 5.0; x += 0.05){
+        int approx_n = 3;
+        Approx a = new Approx(approx_n, xs, ys);
+        for (double x = 0.0, y; x <= 5.5; x += 0.05){
             y = a.getValue(x);
             polynom_line.getData().add(new XYChart.Data<>(x, y));
         }

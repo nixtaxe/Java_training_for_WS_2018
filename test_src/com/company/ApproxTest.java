@@ -3,14 +3,19 @@ package com.company;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.io.InputStream;
+
 import static org.junit.Assert.*;
 
 public class ApproxTest {
     private final double eps = 0.00001;
 
-    @Before
+    @Test
     public void testCreationFromFile(){
-        //...
+        InputStream inp = this.getClass().getResourceAsStream("Approx_input.txt");
+        Approx a = new Approx(inp);
+        assertArrayEquals(new double[]{0, 1}, a.coefs, eps);
     }
 
     @Test

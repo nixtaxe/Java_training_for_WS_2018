@@ -3,6 +3,7 @@ import com.company.Solver;
 import com.company.Polynom;
 
 import java.io.FileReader;
+import java.io.InputStream;
 import java.util.Scanner;
 
 public class Interp extends Polynom {
@@ -14,7 +15,7 @@ public class Interp extends Polynom {
         interpolate((double[])F.clone());
     }
 
-    public Interp(FileReader inp){
+    public Interp(InputStream inp){
         Scanner scan = new Scanner(inp);
 
         n = scan.nextInt();

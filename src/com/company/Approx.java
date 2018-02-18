@@ -2,6 +2,7 @@ package com.company;
 
 import com.company.Solver;
 import java.io.FileReader;
+import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Scanner;
 
@@ -17,7 +18,7 @@ public class Approx extends Polynom {
         approximate((double[])F.clone());
     }
 
-    public Approx(FileReader inp){
+    public Approx(InputStream inp){
         Scanner scan = new Scanner(inp);
 
         String line = scan.nextLine();
