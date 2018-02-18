@@ -17,10 +17,12 @@ public class for_test extends Application {
 
         XYChart.Series<Number, Number> points = new XYChart.Series<>();
         XYChart.Series<Number, Number> polynom_line = new XYChart.Series<>();
+        XYChart.Series<Number, Number> interp_line = new XYChart.Series<>();
 
         LineChart<Number, Number> chart = new LineChart<>(xAxis, yAxis);
         chart.getData().add(points);
         chart.getData().add(polynom_line);
+        chart.getData().add(interp_line);
         chart.getStylesheets().add(for_test.class.getResource("chart.css").toExternalForm());
 
         double[] xs = {1, 2, 3, 4, 5};
@@ -31,9 +33,12 @@ public class for_test extends Application {
 
         int approx_n = 3;
         Approx a = new Approx(approx_n, xs, ys);
+        Interp b = new Interp(xs, ys);
         for (double x = 0.0, y; x <= 5.5; x += 0.05){
             y = a.getValue(x);
             polynom_line.getData().add(new XYChart.Data<>(x, y));
+            y = b.getValue(x);
+            interp_line.getData().add(new XYChart.Data<>(x, y));
         }
 
         Scene scene = new Scene(chart);
