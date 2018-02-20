@@ -7,9 +7,9 @@
 }
 
 .default-color2.chart-series-line {
-    -fx-stroke: purple;
+    -fx-stroke: transparent;
 }
 
-.default-color2.chart-line-symbol {
+.default-color3.chart-line-symbol {
     -fx-background-color: transparent;
 }

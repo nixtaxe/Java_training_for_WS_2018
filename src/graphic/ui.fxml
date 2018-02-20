@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="478.0" prefWidth="484.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphic.Controller">
+   <children>
+      <LineChart>
+        <xAxis>
+          <CategoryAxis side="BOTTOM" />
+        </xAxis>
+        <yAxis>
+          <NumberAxis side="LEFT" />
+        </yAxis>
+      </LineChart>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="20.0">
+         <children>
+            <Button mnemonicParsing="false" onAction="#selectInputFile" text="Select input file" />
+            <Spinner onInputMethodTextChanged="#changeApproxDegree" onKeyTyped="#changeApproxDegree" onScroll="#changeApproxDegree" prefWidth="75.0" />
+            <Button mnemonicParsing="false" onAction="#startApprox" text="Approximate" />
+            <Button mnemonicParsing="false" onAction="#switchTo" text="Edit chart" />
+         </children>
+      </HBox>
+   </children>
+</VBox>
