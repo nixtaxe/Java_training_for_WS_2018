@@ -10,12 +10,12 @@
 
 <VBox maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="478.0" prefWidth="484.0" xmlns="http://javafx.com/javafx/8.0.121" xmlns:fx="http://javafx.com/fxml/1" fx:controller="graphic.Controller">
     <children>
-        <LineChart fx:id="chart" animated="false" legendVisible="false" stylesheets="@chart.css">
+        <LineChart fx:id="chart" animated="false" legendVisible="false" onMouseDragOver="#moveChartArea" onMouseDragged="#moveChartArea" onMousePressed="#initDrag" onScroll="#zoom" stylesheets="@chart.css">
             <xAxis>
-                <NumberAxis side="BOTTOM" />
+                <NumberAxis side="BOTTOM" fx:id="xAxis" />
             </xAxis>
             <yAxis>
-                <NumberAxis side="LEFT" />
+                <NumberAxis fx:id="yAxis" side="LEFT" />
             </yAxis>
             <VBox.margin>
                 <Insets right="15.0" top="15.0" />
