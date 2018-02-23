@@ -120,6 +120,8 @@ public class Controller implements Initializable{
 
     @FXML
     private void zoom(ScrollEvent event){
+        if (isEditingChart)
+            return;
         double minX = xAxis.getLowerBound();
         double maxX = xAxis.getUpperBound();
         double minY = yAxis.getLowerBound();
