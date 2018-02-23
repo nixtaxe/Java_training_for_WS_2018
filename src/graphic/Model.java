@@ -46,9 +46,14 @@ public class Model {
     }
 
     // Setters
-    public void setApprox(int degree) {
+    public void setApproxDeg(int degree){
         approx_degree = degree;
         approx = new Approx(degree, X, Y);
+    }
+
+    public void setApprox(double[] new_Y) {
+        Y = new_Y;
+        approx = new Approx(approx_degree, X.clone(), Y.clone());
     }
 
 }

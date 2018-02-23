@@ -1,5 +1,6 @@
 package graphic;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 
 import javafx.event.ActionEvent;
@@ -7,15 +8,13 @@ import javafx.fxml.Initializable;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
-import javafx.scene.input.DragEvent;
-import javafx.scene.input.MouseDragEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.input.ScrollEvent;
 import javafx.stage.FileChooser;
 
-import javax.sound.sampled.Line;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
@@ -31,10 +30,12 @@ public class Controller implements Initializable{
     public LineChart chart;
     public NumberAxis xAxis;
     public NumberAxis yAxis;
+    public Button editingBtn;
     private double dragX;
     private double dragY;
+    private int nearestDataInd;
     private double startX, endX;
-    private boolean isEditingChart = false;
+    private boolean isEditingChart;
     private Model model;
 
     @Override
@@ -45,11 +46,7 @@ public class Controller implements Initializable{
         InputStream inp = this.getClass().getResourceAsStream("input.txt");
         model = new Model(inp);
 
-        xAxis.setAutoRanging(false);
-        xAxis.setForceZeroInRange(false);
-        yAxis.setAutoRanging(false);
-        yAxis.setForceZeroInRange(false);
-        fillChart();
+        initChart();
         fillSpinner();
     }
 
@@ -58,46 +55,61 @@ public class Controller implements Initializable{
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("TXT","*.txt"));
     }
 
-    private void fillChart() {
+    private void initChart(){
+        xAxis.setAutoRanging(false);
+        xAxis.setForceZeroInRange(false);
+        yAxis.setAutoRanging(false);
+        yAxis.setForceZeroInRange(false);
+
+        double delta = 0.05;
+        xAxis.setTickUnit(1);
+        yAxis.setTickUnit(1);
+
+        double[] sortedX = model.getX();
+        Arrays.sort(sortedX);
+        double minX = sortedX[0];
+        double maxX = sortedX[sortedX.length - 1];
+        double borderWidth = (maxX - minX)/4;
+
+        double[] sortedY = model.getY();
+        Arrays.sort(sortedY);
+        double minY = sortedY[0];
+        double maxY = sortedY[sortedY.length - 1];
+        double borderHeight = (maxY - minY)/4;
+
+        addChartPoints(model.getX(), model.getY());
+        fillChart(minX - borderWidth, maxX + borderWidth,
+                minY - borderHeight, maxY + borderHeight);
+    }
+
+    private void addChartPoints(double[] X, double[] Y){
         chart.getData().removeAll(chart.getData());
-
         XYChart.Series points = new XYChart.Series();
-        XYChart.Series approxPolynom = new XYChart.Series();
-
         chart.getData().add(points);
-        chart.getData().add(approxPolynom);
-
-        double[] X = model.getX();
-        double[] Y = model.getY();
 
         for (int i = 0; i < X.length; ++i)
             points.getData().add(new XYChart.Data<>(X[i], Y[i]));
 
-        Arrays.sort(X);
-        double minX = X[0];
-        double maxX = X[X.length - 1];
-        double borderWidth = (maxX - minX)/4;
+    }
+
+    private void fillChart(double leftBound, double rightBound, double lowerBound, double upperBound) {
+        if (chart.getData().size() > 1)
+            chart.getData().removeAll(chart.getData().get(1));
+        XYChart.Series approxPolynom = new XYChart.Series();
+        chart.getData().add(approxPolynom);
+
+        double[] X = model.getX();
         double delta = 0.05;
-
-        xAxis.setLowerBound(minX - borderWidth);
-        xAxis.setUpperBound(maxX + borderWidth);
-        xAxis.setTickUnit(delta*10);
-
-        double minY = Double.MAX_VALUE, maxY = Double.MIN_VALUE;
-        for (double y, x = minX - borderWidth; x <= maxX + borderWidth; x += delta) {
-            y =  model.getApproxValue(x);
+        for (double y, x = leftBound; x <= rightBound; x += delta) {
+            y = model.getApproxValue(x);
             approxPolynom.getData().add(new XYChart.Data<>(x, y));
-            if (y < minY)
-                minY = y;
-            else
-                if (y > maxY)
-                    maxY = y;
         }
 
-        yAxis.setLowerBound(minY - borderWidth);
-        yAxis.setUpperBound(maxY + borderWidth);
-        yAxis.setTickUnit(delta*10);
+        xAxis.setLowerBound(leftBound);
+        yAxis.setLowerBound(lowerBound);
 
+        xAxis.setUpperBound(rightBound);
+        yAxis.setUpperBound(upperBound);
     }
 
     private void fillSpinner() {
@@ -113,43 +125,69 @@ public class Controller implements Initializable{
         double minY = yAxis.getLowerBound();
         double maxY = yAxis.getUpperBound();
         double delta = 2.5;
+        double borderWidth = (maxX - minX) / delta;
+        double borderHeight = (maxY - minY) / delta;
         double direction = event.getDeltaY();
         if (direction > 0) {
-            if (maxX - minX <= 0.5)
+            if (maxX - minX <= 2)
                 return;
 
-            xAxis.setLowerBound(minX + (maxX - minX) / delta / 3);
-            xAxis.setUpperBound(maxX - (maxX - minX) / delta / 3);
-            yAxis.setLowerBound(minY + (maxY - minY) / delta / 3);
-            yAxis.setUpperBound(maxY - (maxY - minY) / delta / 3);
-
+            borderHeight /= 3;
+            borderWidth /= 3;
+            fillChart(minX + borderWidth, maxX - borderWidth,
+                    minY + borderHeight, maxY - borderHeight);
         } else {
-            xAxis.setLowerBound(minX - (maxX - minX) / delta);
-            xAxis.setUpperBound(maxX + (maxX - minX) / delta);
-            yAxis.setLowerBound(minY - (maxY - minY) / delta);
-            yAxis.setUpperBound(maxY + (maxY - minY) / delta);
+            if (maxX - minX >= 50)
+                return;
+
+            fillChart(minX - borderWidth, maxX + borderWidth,
+                    minY - borderHeight, maxY + borderHeight);
         }
     }
 
     @FXML
     private void initDrag(MouseEvent event){
-        dragX = xAxis.getValueForDisplay(event.getX()).doubleValue();
-        dragY = yAxis.getValueForDisplay(event.getY()).doubleValue();
-        System.out.println(dragX);
-        System.out.println(dragY);
+        if (!isEditingChart) {
+            dragX = xAxis.getValueForDisplay(event.getSceneX()).doubleValue();
+            dragY = yAxis.getValueForDisplay(event.getSceneY()).doubleValue();
+            System.out.println(dragX);
+            System.out.println(dragY);
+        }
+        else {
+            nearestDataInd = 0;
+            double distance = Double.MAX_VALUE;
+            dragX = xAxis.getValueForDisplay(event.getX()).doubleValue();
+
+            ObservableList<XYChart.Data> points = ((XYChart.Series)chart.getData().get(0)).getData();
+            for (int i = 0; i < points.size(); ++i) {
+                XYChart.Data data = points.get(i);
+                double xData = (double)data.getXValue();
+                double dataDistance = Math.abs(dragX - xData);
+                if (dataDistance < distance) {
+                    distance = dataDistance;
+                    nearestDataInd = i;
+                }
+            }
+        }
     }
 
     @FXML
     private void moveChartArea(MouseEvent event) {
-//        System.out.println("Dragging");
-        double deltaX = dragX - xAxis.getValueForDisplay(event.getX()).doubleValue();
-        double deltaY = dragY - yAxis.getValueForDisplay(event.getY()).doubleValue();
+        if (!isEditingChart) {
+            double deltaX = dragX - xAxis.getValueForDisplay(event.getX()).doubleValue();
+            double deltaY = dragY - yAxis.getValueForDisplay(event.getY()).doubleValue();
 
-        xAxis.setLowerBound(xAxis.getLowerBound() + deltaX);
-        xAxis.setUpperBound(xAxis.getUpperBound() + deltaX);
-
-        yAxis.setLowerBound(yAxis.getLowerBound() + deltaY);
-        yAxis.setUpperBound(yAxis.getUpperBound() + deltaY);
+            fillChart(xAxis.getLowerBound() + deltaX, xAxis.getUpperBound() + deltaX,
+                    yAxis.getLowerBound() + deltaY, yAxis.getUpperBound() + deltaY);
+        }
+        else {
+            double[] Y = model.getY();
+            Y[nearestDataInd] = yAxis.getValueForDisplay(event.getY()).doubleValue();
+            model.setApprox(Y);
+            addChartPoints(model.getX(), model.getY());
+            fillChart(xAxis.getLowerBound(), xAxis.getUpperBound(),
+                    yAxis.getLowerBound(), yAxis.getUpperBound());
+        }
     }
 
     @FXML
@@ -158,22 +196,27 @@ public class Controller implements Initializable{
         if (file != null){
             InputStream inp = new FileInputStream(file);
             this.model = new Model(inp);
+            initChart();
             fillSpinner();
-            fillChart();
         }
     }
 
     @FXML
     private void startApprox(ActionEvent event) throws Exception{
-        if (model == null)
-            return;
         int approx_deg = (int)spinner.getValue();
-        model.setApprox(approx_deg);
-        fillChart();
+        model.setApproxDeg(approx_deg);
+        fillChart(xAxis.getLowerBound(), xAxis.getUpperBound(), yAxis.getLowerBound(), yAxis.getUpperBound());
     }
 
     @FXML
-    private void switchTo(ActionEvent event){
-        //...
+    private void switchTo(ActionEvent event) {
+        if (isEditingChart) {
+            isEditingChart = false;
+            editingBtn.setText("Edit chart");
+        }
+        else {
+            isEditingChart = true;
+            editingBtn.setText("Move chart");
+        }
     }
 }
