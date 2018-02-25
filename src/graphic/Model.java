@@ -1,6 +1,6 @@
 package graphic;
 
-import com.company.Approx;
+import functionUtils.Approx;
 
 import java.io.InputStream;
 import java.util.Locale;

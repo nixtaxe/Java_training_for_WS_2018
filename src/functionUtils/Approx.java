@@ -1,7 +1,5 @@
-package com.company;
+package functionUtils;
 
-import com.company.Solver;
-import java.io.FileReader;
 import java.io.InputStream;
 import java.util.Arrays;
 import java.util.Scanner;

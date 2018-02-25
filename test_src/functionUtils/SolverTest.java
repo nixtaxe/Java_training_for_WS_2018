@@ -1,9 +1,6 @@
-package com.company;
+package functionUtils;
 
 import org.junit.Test;
-
-import java.io.File;
-import java.io.FileReader;
 
 import static org.junit.Assert.*;
 

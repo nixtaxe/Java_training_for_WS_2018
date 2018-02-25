@@ -1,4 +1,4 @@
-package com.company;
+package functionUtils;
 
 import org.junit.Test;
 

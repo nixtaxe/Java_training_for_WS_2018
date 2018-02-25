@@ -1,9 +1,7 @@
-package com.company;
+package functionUtils;
 
-import org.junit.Before;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.InputStream;
 
 import static org.junit.Assert.*;

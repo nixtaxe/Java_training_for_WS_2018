@@ -1,4 +1,4 @@
-package com.company;
+package functionUtils;
 
 public class Polynom {
     int n;

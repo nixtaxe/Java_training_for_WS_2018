@@ -1,8 +1,5 @@
-package com.company;
-import com.company.Solver;
-import com.company.Polynom;
+package functionUtils;
 
-import java.io.FileReader;
 import java.io.InputStream;
 import java.util.Scanner;
 
