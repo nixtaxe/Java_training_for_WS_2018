@@ -3,6 +3,7 @@ package graphic;
 import com.company.Approx;
 
 import java.io.InputStream;
+import java.util.Locale;
 import java.util.Scanner;
 
 public class Model {
@@ -14,6 +15,7 @@ public class Model {
 
     public Model(InputStream inp){
         Scanner scan = new Scanner(inp);
+        scan.useLocale(Locale.US);
 
         points_n = scan.nextInt();
         X = new double[points_n + 1];
