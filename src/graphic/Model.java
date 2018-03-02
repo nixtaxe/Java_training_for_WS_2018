@@ -55,7 +55,7 @@ public class Model {
 
     public void setApprox(double[] new_Y) {
         Y = new_Y;
-        approx = new Approx(approx_degree, X.clone(), Y.clone());
+        approx.approximate(Y.clone());
     }
 
 }
