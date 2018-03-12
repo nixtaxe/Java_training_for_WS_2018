@@ -1,10 +1,12 @@
 package library;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class mysql_test {
+    private static Connection con;
+    private static Statement stmt;
+    private static ResultSet rs;
+
     public static void main(String[] arr) {
         System.out.println("Loading driver...");
 
@@ -25,6 +27,30 @@ public class mysql_test {
             System.out.println("Database connected!");
         } catch (SQLException e) {
             throw new IllegalStateException("Cannot connect the database!", e);
+        }
+
+        try {
+            // opening database connection to MySQL server
+            con = DriverManager.getConnection(url, username, password);
+
+            // getting Statement object to execute query
+            stmt = con.createStatement();
+
+            // executing SELECT query
+            stmt.executeUpdate("CREATE TABLE `cooks` (\n" +
+                    "  `id` int(11) NOT NULL,\n" +
+                    "  `name` varchar(50) NOT NULL,\n" +
+                    "  `author` varchar(50) NOT NULL,\n" +
+                    "  PRIMARY KEY (`id`)\n" +
+                    ") ENGINE=InnoDB DEFAULT CHARSET=latin1");
+
+        } catch (SQLException sqlEx) {
+            sqlEx.printStackTrace();
+        } finally {
+            //close connection ,stmt and resultset here
+            try { con.close(); } catch(SQLException se) { /*can't do anything */ }
+            try { stmt.close(); } catch(SQLException se) { /*can't do anything */ }
+            //try { rs.close(); } catch(SQLException se) { /*can't do anything */ }
         }
     }
 }
