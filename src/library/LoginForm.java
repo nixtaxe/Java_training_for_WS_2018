@@ -30,7 +30,7 @@ public class LoginForm implements Initializable{
     }
 
     @FXML
-    private void signUp(Event event)
+    private void switchToSignUp(Event event)
     {
         //...
     }
