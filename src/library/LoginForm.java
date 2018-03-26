@@ -17,6 +17,12 @@ public class LoginForm implements Initializable{
     public Button signInButton;
     public Button signUpButton;
 
+    private ConnectionManager connectionManager_;
+
+    public LoginForm(ConnectionManager connectionManager)
+    {
+        connectionManager_ = connectionManager;
+    }
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -26,7 +32,9 @@ public class LoginForm implements Initializable{
     @FXML
     private void signIn(Event event)
     {
-        //...
+        String login = loginField.getText();
+        String password = passwordField.getText();
+        connectionManager_.logIn(login, password);
     }
 
     @FXML
